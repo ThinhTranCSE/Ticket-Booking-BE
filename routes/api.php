@@ -27,7 +27,7 @@ use PhpParser\Node\Expr\FuncCall;
 
 
 // -------- users's endpoints ---------
-Route::middleware('auth:api')->get('/users', function(){
+Route:: get('/users', function(){
     return UserController::getAllUsers();
 });
 Route::middleware('auth:api')->get('/users/id', function(Request $req){
@@ -114,7 +114,8 @@ Route::get('/bookings/user/{user_id}', function(Request $req){
 Route::get('/bookings/{id}', function(Request $req){
     return BookingController::getBookingById($req->id);
 });
-Route::post('/bookings', function(Request $req){
+Route::middleware('auth:api')->post('/bookings', function(Request $req){
+    
     return BookingController::createBooking($req);
 });
 Route::delete('/bookings', function(Request $req){

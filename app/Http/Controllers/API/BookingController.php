@@ -24,7 +24,10 @@ class BookingController extends Controller
 
     static function getAllBookingsOfUser($user_id){
         $bookings = Booking::getAllBookingsOfUser($user_id);
-        return BookingCollection::collection($bookings);
+        return response()->json($bookings->map(function($booking){
+            $booking->poster = asset($booking->poster);
+            return $booking;
+        }));
     }
 
     static function createBooking(Request $req){

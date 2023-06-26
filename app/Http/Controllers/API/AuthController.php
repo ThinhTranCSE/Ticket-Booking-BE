@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use App\User as UserAuth;
+use Illuminate\Support\Facades\Hash;
+
 class AuthController extends Controller
 {
     //
@@ -54,6 +56,7 @@ class AuthController extends Controller
             ], $err->status);
         }
         $input = $req->all();
+        $input['password'] = Hash::make($input['password']);
         $input['role'] = 'user';
         $user = UserAuth::create($input);
 

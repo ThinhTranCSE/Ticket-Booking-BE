@@ -23,7 +23,22 @@ class Booking extends Model
     static function getAllBookingsOfUser(int $user_id){
         $bookings = Booking::query()
             ->where('user_id', '=', $user_id)
-            ->orderBy('booking_time', 'asc')
+            ->join('shows', 'show_id', '=', 'shows.id')
+            ->join('movies', 'shows.movie_id', '=', 'movies.id')
+            ->join('theaters', 'shows.theater_id', '=', 'theaters.id')
+            ->select(
+                'bookings.id', 
+                'booking_date', 
+                'show_id', 
+                'user_id', 
+                'movie_id', 
+                'theater_id', 
+                'show_time', 
+                'movies.name as movie_name', 
+                'theaters.name as theater_name', 
+                'poster'
+            )
+            ->orderBy('booking_date', 'asc')
             ->get();
         return $bookings;
 
@@ -35,6 +50,7 @@ class Booking extends Model
         $booking->user_id = $booking_data['user_id'];
         
         $booking->save();
+        $booking = $booking->fresh();
         return $booking;
     }
 
