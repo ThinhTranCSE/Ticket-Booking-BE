@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\MovieController;
 use App\Http\Controllers\API\ShowController;
@@ -26,19 +27,21 @@ use PhpParser\Node\Expr\FuncCall;
 
 
 // -------- users's endpoints ---------
-Route::get('/users', function(){
+Route::middleware('auth:api')->get('/users', function(){
     return UserController::getAllUsers();
 });
-Route::get('/users/{id}', function($id){
+Route::middleware('auth:api')->get('/users/id', function(Request $req){
+    $id = auth('api')->user()->id;
     return UserController::getUserById($id);
 });
 Route::post('/users', function(Request $req){
     return UserController::createUser($req);
 });
-Route::patch('/users/{id}', function(Request $req){
-    return UserController::updateUser($req, $req->id);
+Route::middleware('auth:api')->patch('/users/id', function(Request $req){
+    $id = auth('api')->user()->id;
+    return UserController::updateUser($req, $id);
 });
-Route::delete('/users/{id}', function($id){
+Route::middleware('auth:api')->delete('/users/{id}', function($id){
     return UserController::deleteUseById($id);
 });
 // ------------------------------------
@@ -116,5 +119,17 @@ Route::post('/bookings', function(Request $req){
 });
 Route::delete('/bookings', function(Request $req){
     return BookingController::deleteBookingById($req->id);
+});
+// --------------------------------------
+
+// -------- authenticated's endpoints ---------
+Route::post('/auth/login', function(Request $req){
+    return AuthController::login($req);
+});
+Route::post('/auth/register', function(Request $req){
+    return AuthController::register($req);
+});
+Route::middleware('auth:api')->delete('/auth/logout', function(Request $req){
+    return AuthController::logout($req);
 });
 // --------------------------------------

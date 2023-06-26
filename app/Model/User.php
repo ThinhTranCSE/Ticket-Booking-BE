@@ -16,7 +16,6 @@ class User extends Model
 
     static function getUserById(int $id){
         $user = User::query()->findOrFail($id);
-        dd($user);
         return $user;
     }
 
