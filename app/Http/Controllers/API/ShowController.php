@@ -24,12 +24,17 @@ class ShowController extends Controller
         return new ShowCollection($show);
     }
 
+    static function getShowByIdWithFullDetails($id){
+        $show = Show::getShowByIdWithFullDetails($id);
+        $show->movie_poster = asset($show->movie_poster);
+        return response()->json(['data' => $show]);
+    }
     static function getAllShowsWithFullDetails(){
         $shows_with_details = Show::getAllShowsWithFullDetails();
         $shows_with_details->map(function($show){
             $show->movie_poster = asset($show->movie_poster);
         });
-        return response()->json($shows_with_details);
+        return response()->json(["data" => $shows_with_details]);
     }
     static function createShow(Request $req){
         try{

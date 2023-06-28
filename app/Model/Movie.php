@@ -38,7 +38,8 @@ class Movie extends Model
     }
 
     static function deleteMovieById(int $id){
-        $movie = Movie::findOrFail($id)->delete();
+        $movie = Movie::findOrFail($id);
+        $movie->delete();
         return $movie;
     }
 }

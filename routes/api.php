@@ -72,6 +72,11 @@ Route::delete('/movies/{id}', function(Request $req){
 Route::get('/shows', function(){
     return ShowController::getAllShows();
 });
+
+Route::get('/shows/details/{id}', function(Request $req){
+    return ShowController::getShowByIdWithFullDetails($req->id);
+});
+
 Route::get('/shows/details', function(){
     return ShowController::getAllShowsWithFullDetails();
 });

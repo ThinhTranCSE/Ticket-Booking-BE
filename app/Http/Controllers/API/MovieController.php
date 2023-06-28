@@ -72,7 +72,6 @@ class MovieController extends Controller
                 'description' => [
                 ],
                 'duration' => [
-                    'integer',
                     'min:0'
                 ],
                 'poster' => [

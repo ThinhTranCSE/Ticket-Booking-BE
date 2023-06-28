@@ -36,7 +36,8 @@ class Theater extends Model
     }
 
     static function deleteTheaterById(int $id){
-        $theater = Theater::query()->findOrFail($id)->delete();
+        $theater = Theater::query()->findOrFail($id);
+        $theater->delete();
         return $theater;
     }
 

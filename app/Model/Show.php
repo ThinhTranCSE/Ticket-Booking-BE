@@ -24,11 +24,11 @@ class Show extends Model
                 'shows.id',
                 'shows.show_time', 
                 'movies.name as movie_name', 
-                'movies.description as movie_description', 
-                'movies.duration as movie_duration', 
+                // 'movies.description as movie_description', 
+                // 'movies.duration as movie_duration', 
                 'movies.poster as movie_poster', 
                 'theaters.name as theater_name',
-                'theaters.location as theater_location'
+                // 'theaters.location as theater_location'
             )
             ->get();
         return $shows;
@@ -39,6 +39,24 @@ class Show extends Model
         return $show;
     }
 
+    static function getShowByIdWithFullDetails(int $id){
+        $shows = Show::query()
+            ->join('movies', 'shows.movie_id', '=', 'movies.id')
+            ->join('theaters', 'shows.theater_id', '=', 'theaters.id')
+            ->where('shows.id', '=', $id)
+            ->select(
+                'shows.id',
+                'shows.show_time', 
+                'movies.name as movie_name', 
+                // 'movies.description as movie_description', 
+                // 'movies.duration as movie_duration', 
+                'movies.poster as movie_poster', 
+                'theaters.name as theater_name',
+                // 'theaters.location as theater_location'
+            )
+            ->get();
+        return $shows[0];
+    }
     static function createShow($show_data){
         $show = new Show;
         $show->show_time = $show_data['show_time'];
@@ -60,7 +78,8 @@ class Show extends Model
     }
 
     static function deleteShowById(int $id){
-        $show = Show::query()->findOrFail($id)->delete();
+        $show = Show::query()->findOrFail($id);
+        $show->delete();
         return $show;
     }
 }

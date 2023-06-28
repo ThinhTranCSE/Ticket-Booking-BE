@@ -41,7 +41,8 @@ class User extends Model
     }
 
     static function deleteUserById(int $id){
-        $user = User::findOrFail($id)->delete();
+        $user = User::findOrFail($id);
+        $user->delete();
         return $user;
     }
 }

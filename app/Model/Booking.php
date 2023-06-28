@@ -55,7 +55,8 @@ class Booking extends Model
     }
 
     static function deleteBookingById(int $id){
-        $booking = Booking::query()->findOrFail($id)->delete();
+        $booking = Booking::query()->findOrFail($id);
+        $booking->delete();
         return $booking;
     }
 }
