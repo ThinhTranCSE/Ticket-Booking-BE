@@ -29,21 +29,23 @@ use PhpParser\Node\Expr\FuncCall;
 // -------- users's endpoints ---------
 Route:: get('/users', function(){
     return UserController::getAllUsers();
-});
-Route::middleware('auth:api')->get('/users/id', function(Request $req){
-    $id = auth('api')->user()->id;
-    return UserController::getUserById($id);
-});
+})->middleware(['auth:api', 'can:users.viewAny']);
+
+Route::get('/users/{id}', function(Request $req){
+    return UserController::getUserById($req->id);
+})->middleware(['auth:api', 'can:users.view,id']) ;
+
 Route::post('/users', function(Request $req){
     return UserController::createUser($req);
-});
-Route::middleware('auth:api')->patch('/users/id', function(Request $req){
-    $id = auth('api')->user()->id;
-    return UserController::updateUser($req, $id);
-});
+})->middleware(['auth:api', 'can:users.create']);
+
+Route::middleware('auth:api')->patch('/users/{id}', function(Request $req){
+    return UserController::updateUser($req, $req->id);
+})->middleware(['auth:api', 'can:users.update,id']);
+
 Route::middleware('auth:api')->delete('/users/{id}', function($id){
     return UserController::deleteUseById($id);
-});
+})->middleware(['auth:api', 'can:users.delete,id']);
 // ------------------------------------
 
 // -------- movies's endpoints ---------
@@ -55,13 +57,15 @@ Route::get('/movies/{id}', function(Request $req){
 });
 Route::post('/movies', function(Request $req){
     return MovieController::createMovie($req);
-});
+})->middleware(['auth:api', 'can:movies.create']);
+
 Route::patch('/movies/{id}', function(Request $req){
     return MovieController::updateMovie($req, $req->id);
-});
+})->middleware(['auth:api', 'can:movies.update']);
+
 Route::delete('/movies/{id}', function(Request $req){
     return MovieController::deleteMovieById($req->id);
-});
+})->middleware(['auth:api', 'can:movies.delete']);
 // --------------------------------------
 
 // -------- shows's endpoints -----------
@@ -74,15 +78,18 @@ Route::get('/shows/details', function(){
 Route::get('/shows/{id}', function(Request $req){
     return ShowController::getShowById($req->id);
 });
+
 Route::post('/shows', function(Request $req){
     return ShowController::createShow($req);
-});
+})->middleware(['auth:api', 'can:shows.create']);
+
 Route::patch('/shows/{id}', function(Request $req){
     return ShowController::updateShow($req, $req->id);
-});
+})->middleware(['auth:api', 'can:shows.update']);
+
 Route::delete('/shows/{id}', function(Request $req){
     return ShowController::deleteShowById($req->id);
-});
+})->middleware(['auth:api', 'can:shows.delete']);
 
 // --------------------------------------
 
@@ -93,34 +100,40 @@ Route::get('/theaters', function(){
 Route::get('/theaters/{id}', function(Request $req){
     return TheaterController::getTheaterById($req->id);
 });
+
 Route::post('/theaters', function(Request $req){
     return TheaterController::createTheater($req);
-});
+})->middleware(['auth:api', 'can:theaters.create']);
+
 Route::patch('/theaters/{id}', function(Request $req){
     return TheaterController::updateTheater($req, $req->id);
-});
+})->middleware(['auth:api', 'can:theaters.update']);
+
 Route::delete('/theaters/{id}', function(Request $req){
     return TheaterController::deleteTheaterById($req->id);
-});
+})->middleware(['auth:api', 'can:theaters.delete']);
 // --------------------------------------
 
 // -------- bookings's endpoints ---------
 Route::get('/bookings', function(){
     return BookingController::getAllBookings();
-});
+})->middleware(['auth:api', 'can:bookings.viewAny']);
+
 Route::get('/bookings/user/{user_id}', function(Request $req){
     return BookingController::getAllBookingsOfUser($req->user_id);
-});
+})->middleware(['auth:api', 'can:bookings.viewAllOf,user_id']);
+
 Route::get('/bookings/{id}', function(Request $req){
     return BookingController::getBookingById($req->id);
-});
-Route::middleware('auth:api')->post('/bookings', function(Request $req){
-    
+})->middleware(['auth:api', 'can:bookings.view,id']);
+
+Route::post('/bookings', function(Request $req){
     return BookingController::createBooking($req);
-});
+})->middleware(['auth:api']);
+
 Route::delete('/bookings', function(Request $req){
     return BookingController::deleteBookingById($req->id);
-});
+})->middleware(['auth:api', 'can:bookings.delete']);
 // --------------------------------------
 
 // -------- authenticated's endpoints ---------
@@ -130,7 +143,7 @@ Route::post('/auth/login', function(Request $req){
 Route::post('/auth/register', function(Request $req){
     return AuthController::register($req);
 });
-Route::middleware('auth:api')->delete('/auth/logout', function(Request $req){
+Route::delete('/auth/logout', function(Request $req){
     return AuthController::logout($req);
-});
+})->middleware(['auth:api']);
 // --------------------------------------

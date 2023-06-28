@@ -59,6 +59,7 @@ class AuthController extends Controller
         $input['password'] = Hash::make($input['password']);
         $input['role'] = 'user';
         $user = UserAuth::create($input);
+        $user = $user->fresh();
 
         $token = $user->createToken(AuthController::CREATE_TOKEN_STRING)->accessToken;
         return response()->json([

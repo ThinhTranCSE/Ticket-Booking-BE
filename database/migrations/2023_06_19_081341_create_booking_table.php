@@ -16,8 +16,8 @@ class CreateBookingTable extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->dateTime('booking_date')->default(date('Y-m-d H:i:s'));
-            $table->foreignId('show_id');
-            $table->foreignId('user_id');
+            $table->foreignId('show_id')->nullable();
+            $table->foreignId('user_id')->nullable();
             $table->timestamps();
 
             
@@ -25,9 +25,9 @@ class CreateBookingTable extends Migration
         Schema::disableForeignKeyConstraints();
         Schema::table('bookings', function (Blueprint $table){
             $table->foreign('show_id')
-                ->references('id')->on('shows');
+                ->references('id')->on('shows')->onDelete('set null');
             $table->foreign('user_id')
-                ->references('id')->on('users');
+                ->references('id')->on('users')->onDelete('set null');
         });
         Schema::enableForeignKeyConstraints();
 
