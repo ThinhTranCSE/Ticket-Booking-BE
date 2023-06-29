@@ -15,7 +15,7 @@ class CreateBookingTable extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('booking_date')->default(date('Y-m-d H:i:s'));
+            $table->timestamp('booking_date');
             $table->foreignId('show_id')->nullable();
             $table->foreignId('user_id')->nullable();
             $table->timestamps();

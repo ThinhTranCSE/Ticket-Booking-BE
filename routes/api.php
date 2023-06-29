@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookingController;
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\MovieController;
 use App\Http\Controllers\API\ShowController;
 use App\Http\Controllers\API\TheaterController;
@@ -151,4 +152,16 @@ Route::post('/auth/register', function(Request $req){
 Route::delete('/auth/logout', function(Request $req){
     return AuthController::logout($req);
 })->middleware(['auth:api']);
+// --------------------------------------
+
+// -------- dashboard's endpoints ---------
+Route::get('/dashboard/line', function(){
+    return DashboardController::getLineChartData();
+})->middleware(['auth:api', 'can:dashboard.views']);
+Route::get('/dashboard/pie', function(){
+    return DashboardController::getPieChartData();
+})->middleware(['auth:api', 'can:dashboard.views']);
+Route::get('/dashboard/bar', function(){
+    return DashboardController::getBarChartData();
+})->middleware(['auth:api', 'can:dashboard.views']);
 // --------------------------------------

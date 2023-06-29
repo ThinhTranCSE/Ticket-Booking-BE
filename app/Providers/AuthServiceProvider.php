@@ -39,5 +39,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::resource('theaters', TheaterPolicy::class);
         Gate::resource('bookings', BookingPolicy::class);
         Gate::define('bookings.viewAllOf', [BookingPolicy::class, 'viewAllOf']);
+        Gate::define('dashboard.views', function($user){
+            return $user->role == 'admin';
+        });
     }
 }
