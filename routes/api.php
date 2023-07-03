@@ -155,13 +155,13 @@ Route::delete('/auth/logout', function(Request $req){
 // --------------------------------------
 
 // -------- dashboard's endpoints ---------
-Route::get('/dashboard/line', function(){
-    return DashboardController::getLineChartData();
+Route::get('/dashboard/line', function(Request $req){
+    return DashboardController::getLineChartData($req->query('from'), $req->query('to'));
 })->middleware(['auth:api', 'can:dashboard.views']);
-Route::get('/dashboard/pie', function(){
-    return DashboardController::getPieChartData();
+Route::get('/dashboard/pie', function(Request $req){
+    return DashboardController::getPieChartData($req->query('from'), $req->query('to'));
 })->middleware(['auth:api', 'can:dashboard.views']);
-Route::get('/dashboard/bar', function(){
-    return DashboardController::getBarChartData();
+Route::get('/dashboard/bar', function(Request $req){
+    return DashboardController::getBarChartData($req->query('from'), $req->query('to'));
 })->middleware(['auth:api', 'can:dashboard.views']);
 // --------------------------------------

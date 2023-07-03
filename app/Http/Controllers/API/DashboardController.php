@@ -12,17 +12,17 @@ use Illuminate\Support\Facades\DB;
  
 class DashboardController extends Controller
 {
-    static function getLineChartData(){
-        $date_now = date_create('now');
-        $date_last_month = date_create('now');
-        date_sub($date_last_month, date_interval_create_from_date_string("30 days"));
-        date_time_set($date_now, 23, 59);
-        date_time_set($date_last_month, 0, 0);
+    static function getLineChartData($from, $to){
+        $date_to = $to != null ? date_create($to) : date_create('now');
+        $date_from = $from != null ? date_create($from) : date_create('now');
+        $from == null  ? date_sub($date_from, date_interval_create_from_date_string("30 days")) : null;
+        date_time_set($date_to, 23, 59);
+        date_time_set($date_from, 0, 0);
 
         //line_chart_data -> { booking_count, date }
         $line_chart_data = Booking ::query()
-            ->where('booking_date', '>=', $date_last_month, 'and')
-            ->where('booking_date', '<=', $date_now)
+            ->where('booking_date', '>=', $date_from, 'and')
+            ->where('booking_date', '<=', $date_to)
             ->selectRaw('date(booking_date) as date, count(id) as booking_count')
             ->groupBy('date')
             ->orderBy('date', 'asc')
@@ -30,8 +30,16 @@ class DashboardController extends Controller
         return response()->json(['data' => $line_chart_data]);
     }
 
-    static function getPieChartData(){
+    static function getPieChartData($from, $to){
+        $date_to = $to != null ? date_create($to) : date_create('now');
+        $date_from = $from != null ? date_create($from) : date_create('now');
+        $from == null  ? date_sub($date_from, date_interval_create_from_date_string("30 days")) : null;
+        date_time_set($date_to, 23, 59);
+        date_time_set($date_from, 0, 0);
+
         $pie_chart_data = Booking::query()
+            ->where('booking_date', '>=', $date_from, 'and')
+            ->where('booking_date', '<=', $date_to)
             ->leftJoin('shows', 'show_id', '=', 'shows.id')
             ->join('movies', 'shows.movie_id', '=', 'movies.id')
             ->selectRaw('movies.name as movie_name, count(bookings.id) as booking_count')
@@ -40,8 +48,16 @@ class DashboardController extends Controller
         return response()->json(['data' => $pie_chart_data]);
     }
 
-    static function getBarChartData(){
+    static function getBarChartData($from, $to){
+        $date_to = $to != null ? date_create($to) : date_create('now');
+        $date_from = $from != null ? date_create($from) : date_create('now');
+        $from == null  ? date_sub($date_from, date_interval_create_from_date_string("30 days")) : null;
+        date_time_set($date_to, 23, 59);
+        date_time_set($date_from, 0, 0);
+
         $bar_chart_data = Booking::query()
+            ->where('booking_date', '>=', $date_from, 'and')
+            ->where('booking_date', '<=', $date_to)
             ->leftJoin('shows', 'show_id', '=', 'shows.id')
             ->join('theaters', 'shows.theater_id', '=', 'theaters.id')
             ->selectRaw('theaters.name as theater_name, count(bookings.id) as booking_count')
